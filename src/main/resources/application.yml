@@ -1,0 +1,20 @@
+spring:
+  config:
+    import: optional:classpath:application-secret.properties
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lecturedb
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # create / update / none 중 선택
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080
