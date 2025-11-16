@@ -16,7 +16,7 @@ public class Transcript {
     private Integer transcriptId;
 
     private Double startTime;
-    private Double endTime;
+
 
     @Column(columnDefinition = "TEXT")
     private String content;

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class TranscriptDTO {
     private Integer transcriptId;
     private Double startTime;
-    private Double endTime;
+
     private String content;
     private LocalDateTime createdAt;
     private Integer lectureId;
