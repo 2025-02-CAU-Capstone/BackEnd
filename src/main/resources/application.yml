@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:classpath:application-secret.properties
   datasource:
-    url: jdbc:postgresql://localhost:5432/lecturedb
+    url: jdbc:postgresql://database-1.ch0222kkis68.ap-northeast-2.rds.amazonaws.com/capstone
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
