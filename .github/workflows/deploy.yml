@@ -2,7 +2,7 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [ "develop" ]   # develop 브랜치에 push될 때 배포 실행
+    branches: [ "develop" ]
 
 jobs:
   build-and-deploy:
@@ -24,18 +24,18 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      # ↓↓↓ JAR 파일을 EC2로 업로드 ↓↓↓
-      - name: Upload JAR to EC2
-        uses: appleboy/scp-action@v0.1.4
+      # --- Upload JAR to EC2 ---
+      - name: Upload JAR using rsync
+        uses: burnett01/rsync-deployments@5.2.2
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "build/libs/*SNAPSHOT.jar"
-          target: "/home/ubuntu/app/app.jar"
-          overwrite: true
+          switches: -avzr --delete
+          path: build/libs/*SNAPSHOT.jar
+          remote_path: /home/ubuntu/app/          # <-- 반드시 디렉토리!
+          remote_user: ubuntu
+          remote_host: ${{ secrets.HOST }}
+          remote_key: ${{ secrets.SSH_KEY }}
 
-      # ↓↓↓ EC2에서 서비스 재시작 ↓↓↓
+      # --- Restart service ---
       - name: Restart EC2 service
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -43,6 +43,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            mv /home/ubuntu/app/*SNAPSHOT.jar /home/ubuntu/app/app.jar
             sudo systemctl daemon-reload
             sudo systemctl restart p2l
             sudo systemctl status p2l --no-pager
