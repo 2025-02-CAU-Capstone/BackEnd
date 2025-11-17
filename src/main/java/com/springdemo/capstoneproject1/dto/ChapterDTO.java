@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 public class ChapterDTO {
     private Integer chapterId;
     private String title;
-    private String bookName;
-    private Integer startPage;
+    private Integer orderIndex;
     private LocalDateTime createdAt;
 }

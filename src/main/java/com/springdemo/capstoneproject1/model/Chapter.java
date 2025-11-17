@@ -18,10 +18,8 @@ public class Chapter {
     @Column(nullable = false, length = 255)
     private String title;
 
-    @Column(nullable = false, length = 255)
-    private String bookName;
-
-    private Integer startPage;
+    @Column(nullable = false)
+    private Integer orderIndex;   // Order of the chapter in the course
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
