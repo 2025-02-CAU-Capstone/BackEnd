@@ -32,11 +32,11 @@ public class LectureController {
     @PostMapping("/create")
     public Lecture createLecture(@RequestBody LectureCreateRequest req) {
         Lecture l = new Lecture();
-        l.setLectureId(req.getLectureId());
         l.setTitle(req.getTitle());
         l.setDescription(req.getDescription());
         l.setCreatedAt(LocalDateTime.now());
-        return lectureRepository.save(l);
+
+        return lectureRepository.save(l);  // 자동으로 ID 생성됨
     }
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {

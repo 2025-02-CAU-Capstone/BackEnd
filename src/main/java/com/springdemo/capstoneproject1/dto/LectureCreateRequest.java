@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class LectureCreateRequest {
-    private Integer lectureId;
     private String title;
-    private String description;
+    private String description; // optional
 }
