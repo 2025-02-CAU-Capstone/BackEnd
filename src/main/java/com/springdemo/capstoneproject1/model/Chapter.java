@@ -17,6 +17,8 @@ public class Chapter {
 
     private String title;
 
+    private Integer orderIndex;
+
     private String url;
 
     private Double duration;
