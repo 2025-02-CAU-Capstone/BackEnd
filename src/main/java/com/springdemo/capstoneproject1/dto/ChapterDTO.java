@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 @Data
 public class ChapterDTO {
     private Integer chapterId;
+    private Integer lectureId;
     private String title;
     private Integer orderIndex;
     private String url;
