@@ -1,6 +1,7 @@
 package com.springdemo.capstoneproject1.controller;
 
 import com.springdemo.capstoneproject1.dto.TranscriptDTO;
+import com.springdemo.capstoneproject1.dto.TranscriptUploadRequest;
 import com.springdemo.capstoneproject1.model.Transcript;
 import com.springdemo.capstoneproject1.service.TranscriptService;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,14 @@ public class TranscriptController {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
+
+    // JSON upload API
+    @PostMapping("/upload-json")
+    public ResponseEntity<String> uploadTranscriptJson(@RequestBody TranscriptUploadRequest req) {
+        transcriptService.processTranscriptJson(req);
+        return ResponseEntity.ok("JSON upload success.");
+    }
+
     // Lecture별로 Transcript 일괄 삭제
     @DeleteMapping("/lecture/{lectureId}")
     public void deleteByLecture(@PathVariable Integer lectureId) {
