@@ -18,6 +18,48 @@ import java.util.stream.Collectors;
 public class TranscriptController {
     private final TranscriptService transcriptService;
 
+    // TXT file upload API
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
+    public ResponseEntity<String> uploadTranscript(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("lectureId") Integer lectureId,
+            @RequestParam("chapterId") Integer chapterId) {
+
+        try {
+            transcriptService.processTranscriptFile(file, lectureId, chapterId);
+            return ResponseEntity.ok("Transcript uploaded successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
+    // JSON upload API
+    @PostMapping("/upload-json")
+    public ResponseEntity<String> uploadTranscriptJson(@RequestBody TranscriptUploadRequest req) {
+        transcriptService.processTranscriptJson(req);
+        return ResponseEntity.ok("JSON upload success.");
+    }
+
+    // Lecture별로 Transcript 일괄 삭제
+    @DeleteMapping("/lecture/{lectureId}")
+    public void deleteByLecture(@PathVariable Integer lectureId) {
+        transcriptService.deleteByLectureId(lectureId);
+    }
+
+//    @GetMapping("/{id}")
+//    public TranscriptDTO getById(@PathVariable Integer id) {
+//        Transcript transcript = transcriptService.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Transcript not found"));
+//
+//        TranscriptDTO dto = new TranscriptDTO();
+//        dto.setTranscriptId(transcript.getTranscriptId());
+//        dto.setStartTime(transcript.getStartTime());
+//        dto.setContent(transcript.getContent());
+//        dto.setCreatedAt(transcript.getCreatedAt());
+//        dto.setLectureId(transcript.getLecture().getLectureId());
+//
+//        return dto;
+//    }
 
     // Basic CRUD operations
     @GetMapping
@@ -47,49 +89,5 @@ public class TranscriptController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         transcriptService.delete(id);
-    }
-
-
-    // TXT file upload API
-    @PostMapping(value = "/upload", consumes = "multipart/form-data")
-    public ResponseEntity<String> uploadTranscript(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("lectureId") Integer lectureId,
-            @RequestParam("chapterId") Integer chapterId) {
-
-        try {
-            transcriptService.processTranscriptFile(file, lectureId, chapterId);
-            return ResponseEntity.ok("Transcript uploaded successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error: " + e.getMessage());
-        }
-    }
-
-    // JSON upload API
-    @PostMapping("/upload-json")
-    public ResponseEntity<String> uploadTranscriptJson(@RequestBody TranscriptUploadRequest req) {
-        transcriptService.processTranscriptJson(req);
-        return ResponseEntity.ok("JSON upload success.");
-    }
-
-    // Lecture별로 Transcript 일괄 삭제
-    @DeleteMapping("/lecture/{lectureId}")
-    public void deleteByLecture(@PathVariable Integer lectureId) {
-        transcriptService.deleteByLectureId(lectureId);
-    }
-
-    @GetMapping("/{id}")
-    public TranscriptDTO getById(@PathVariable Integer id) {
-        Transcript transcript = transcriptService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transcript not found"));
-
-        TranscriptDTO dto = new TranscriptDTO();
-        dto.setTranscriptId(transcript.getTranscriptId());
-        dto.setStartTime(transcript.getStartTime());
-        dto.setContent(transcript.getContent());
-        dto.setCreatedAt(transcript.getCreatedAt());
-        dto.setLectureId(transcript.getLecture().getLectureId());
-
-        return dto;
     }
 }
