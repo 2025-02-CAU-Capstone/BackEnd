@@ -1,5 +1,7 @@
 package com.springdemo.capstoneproject1.service;
 
+import com.springdemo.capstoneproject1.dto.TranscriptItemDTO;
+import com.springdemo.capstoneproject1.dto.TranscriptUploadRequest;
 import com.springdemo.capstoneproject1.model.Chapter;
 import com.springdemo.capstoneproject1.model.Lecture;
 import com.springdemo.capstoneproject1.model.Transcript;
@@ -88,5 +90,26 @@ public class TranscriptService {
     @Transactional
     public void deleteByLectureId(Integer lectureId) {
         transcriptRepository.deleteByLecture_LectureId(lectureId);
+    }
+
+    public void processTranscriptJson(TranscriptUploadRequest req) {
+
+        Lecture lecture = lectureRepository.findById(req.getLectureId())
+                .orElseThrow(() -> new RuntimeException("Lecture not found"));
+
+        Chapter chapter = chapterRepository.findById(req.getChapterId())
+                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+
+        for (TranscriptItemDTO item : req.getTranscripts()) {
+            Transcript t = Transcript.builder()
+                    .startTime(item.getStartTime())
+                    .content(item.getContent())
+                    .lecture(lecture)
+                    .chapter(chapter)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+
+            transcriptRepository.save(t);
+        }
     }
 }
