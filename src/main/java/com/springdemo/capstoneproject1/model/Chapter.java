@@ -1,32 +1,34 @@
 package com.springdemo.capstoneproject1.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "chapter")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
 public class Chapter {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer chapterId;
 
-    @Column(nullable = false, length = 255)
     private String title;
 
-    @Column(nullable = false)
-    private Integer orderIndex;   // Order of the chapter in the course
+    private String url;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    private Double duration;
 
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    // FK: Lecture
+    @ManyToOne
+    @JoinColumn(name = "lecture_id")
+    private Lecture lecture;
+
+    // Chapter : Transcript = 1:N
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
-    private List<Transcript> transcripts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
-    private List<Match> matches = new ArrayList<>();
+    private List<Transcript> transcripts;
 }
