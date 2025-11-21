@@ -1,12 +1,10 @@
 package com.springdemo.capstoneproject1.dto;
 
 import lombok.Data;
-import java.time.LocalDateTime;
 
 @Data
-public class LectureDTO {
+public class LectureCreateRequest {
     private Integer lectureId;
     private String title;
     private String description;
-    private LocalDateTime createdAt;
 }

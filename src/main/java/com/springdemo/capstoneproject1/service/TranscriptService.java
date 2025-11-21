@@ -3,8 +3,10 @@ package com.springdemo.capstoneproject1.service;
 import com.springdemo.capstoneproject1.dto.TranscriptItemDTO;
 import com.springdemo.capstoneproject1.dto.TranscriptUploadRequest;
 import com.springdemo.capstoneproject1.model.Chapter;
+import com.springdemo.capstoneproject1.model.Lecture;
 import com.springdemo.capstoneproject1.model.Transcript;
 import com.springdemo.capstoneproject1.repository.ChapterRepository;
+import com.springdemo.capstoneproject1.repository.LectureRepository;
 import com.springdemo.capstoneproject1.repository.TranscriptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class TranscriptService {
 
     private final TranscriptRepository transcriptRepository;
     private final ChapterRepository chapterRepository;
+    private final LectureRepository lectureRepository;
 
     public List<Transcript> findAll() {
         return transcriptRepository.findAll();
@@ -113,4 +116,23 @@ public class TranscriptService {
             transcriptRepository.save(t);
         }
     }
+
+    // 챕터가 없으면 생성하는 헬퍼 메서드
+    private Chapter getOrCreateChapter(Integer lectureId, Integer chapterId) {
+        return chapterRepository.findById(chapterId)
+                .orElseGet(() -> {
+
+                    Lecture lecture = lectureRepository.findById(lectureId)
+                            .orElseThrow(() -> new RuntimeException("Lecture not found"));
+
+                    Chapter newChapter = new Chapter();
+                    newChapter.setChapterId(chapterId);        // ID 그대로 사용
+                    newChapter.setTitle("Chapter " + chapterId);
+                    newChapter.setCreatedAt(LocalDateTime.now());
+                    newChapter.setLecture(lecture);
+
+                    return chapterRepository.save(newChapter);
+                });
+    }
+
 }
