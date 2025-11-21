@@ -3,10 +3,8 @@ package com.springdemo.capstoneproject1.service;
 import com.springdemo.capstoneproject1.dto.TranscriptItemDTO;
 import com.springdemo.capstoneproject1.dto.TranscriptUploadRequest;
 import com.springdemo.capstoneproject1.model.Chapter;
-import com.springdemo.capstoneproject1.model.Lecture;
 import com.springdemo.capstoneproject1.model.Transcript;
 import com.springdemo.capstoneproject1.repository.ChapterRepository;
-import com.springdemo.capstoneproject1.repository.LectureRepository;
 import com.springdemo.capstoneproject1.repository.TranscriptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,9 +20,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class TranscriptService {
+
     private final TranscriptRepository transcriptRepository;
-    private final LectureRepository lectureRepository;
     private final ChapterRepository chapterRepository;
+
     public List<Transcript> findAll() {
         return transcriptRepository.findAll();
     }
@@ -41,10 +40,11 @@ public class TranscriptService {
         transcriptRepository.deleteById(id);
     }
 
-    public void processTranscriptFile(MultipartFile file, Integer lectureId, Integer chapterId) throws Exception {
 
-        Lecture lecture = lectureRepository.findById(lectureId)
-                .orElseThrow(() -> new RuntimeException("Lecture not found"));
+    /** ---------------------------------------------
+     *  TXT 파일 업로드 처리
+     * --------------------------------------------- */
+    public void processTranscriptFile(MultipartFile file, Integer chapterId) throws Exception {
 
         Chapter chapter = chapterRepository.findById(chapterId)
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
@@ -55,7 +55,6 @@ public class TranscriptService {
 
         for (String line : lines) {
 
-            // 예: "[00:00:02,610] 문장 내용"
             if (!line.contains("]")) continue;
 
             String timePart = line.substring(1, line.indexOf("]"));
@@ -66,13 +65,13 @@ public class TranscriptService {
             Transcript t = new Transcript();
             t.setStartTime(startTimeSeconds);
             t.setContent(contentPart);
-            t.setLecture(lecture);
             t.setChapter(chapter);
             t.setCreatedAt(LocalDateTime.now());
 
             transcriptRepository.save(t);
         }
     }
+
 
     /** "00:00:02,610" → 2.610 */
     private double convertTimeToSeconds(String t) {
@@ -87,27 +86,29 @@ public class TranscriptService {
         return h * 3600 + m * 60 + s + (ms / 1000.0);
     }
 
+    /** ---------------------------------------------
+     *  Chapter ID로 Transcript 전체 삭제
+     * --------------------------------------------- */
     @Transactional
-    public void deleteByLectureId(Integer lectureId) {
-        transcriptRepository.deleteByLecture_LectureId(lectureId);
+    public void deleteByChapterId(Integer chapterId) {
+        transcriptRepository.deleteByChapter_ChapterId(chapterId);
     }
 
-    public void processTranscriptJson(TranscriptUploadRequest req) {
 
-        Lecture lecture = lectureRepository.findById(req.getLectureId())
-                .orElseThrow(() -> new RuntimeException("Lecture not found"));
+    /** ---------------------------------------------
+     *  JSON 업로드 처리
+     * --------------------------------------------- */
+    public void processTranscriptJson(TranscriptUploadRequest req) {
 
         Chapter chapter = chapterRepository.findById(req.getChapterId())
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
 
         for (TranscriptItemDTO item : req.getTranscripts()) {
-            Transcript t = Transcript.builder()
-                    .startTime(item.getStartTime())
-                    .content(item.getContent())
-                    .lecture(lecture)
-                    .chapter(chapter)
-                    .createdAt(LocalDateTime.now())
-                    .build();
+            Transcript t = new Transcript();
+            t.setStartTime(item.getStartTime());
+            t.setContent(item.getContent());
+            t.setChapter(chapter);
+            t.setCreatedAt(LocalDateTime.now());
 
             transcriptRepository.save(t);
         }

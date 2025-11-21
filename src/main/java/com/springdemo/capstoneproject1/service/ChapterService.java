@@ -22,19 +22,15 @@ public class ChapterService {
         return chapterRepository.findById(id);
     }
 
+    public List<Chapter> findByLecture(Integer lectureId) {
+        return chapterRepository.findByLecture_LectureId(lectureId);
+    }
+
     public Chapter save(Chapter chapter) {
-        // createdAt 자동 세팅
-        if (chapter.getCreatedAt() == null) {
-            chapter.setCreatedAt(java.time.LocalDateTime.now());
-        }
         return chapterRepository.save(chapter);
     }
 
     public void delete(Integer id) {
         chapterRepository.deleteById(id);
-    }
-
-    public List<Chapter> findAllOrdered() {
-        return chapterRepository.findAllByOrderByOrderIndexAsc();
     }
 }
