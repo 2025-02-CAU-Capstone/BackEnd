@@ -21,7 +21,7 @@ public class ChapterController {
     // 전체 조회 (by order)
     @GetMapping
     public List<ChapterDTO> getAll() {
-        return chapterService.findAllOrdered()
+        return chapterService.findAll()
                 .stream()
                 .map(ch -> modelMapper.map(ch, ChapterDTO.class))
                 .collect(Collectors.toList());
