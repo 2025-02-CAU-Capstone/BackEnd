@@ -2,6 +2,8 @@ package com.springdemo.capstoneproject1.controller;
 
 import com.springdemo.capstoneproject1.dto.ChapterDTO;
 import com.springdemo.capstoneproject1.model.Chapter;
+import com.springdemo.capstoneproject1.model.Lecture;
+import com.springdemo.capstoneproject1.repository.LectureRepository;
 import com.springdemo.capstoneproject1.service.ChapterService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,6 +19,7 @@ public class ChapterController {
 
     private final ChapterService chapterService;
     private final ModelMapper modelMapper;
+    private final LectureRepository lectureRepository;
 
     // 전체 조회 (by order)
     @GetMapping
@@ -37,9 +40,23 @@ public class ChapterController {
     // 생성
     @PostMapping
     public ChapterDTO create(@RequestBody ChapterDTO dto) {
-        Chapter chapter = modelMapper.map(dto, Chapter.class);
+
+        Lecture lecture = lectureRepository.findById(dto.getLectureId())
+                .orElseThrow(() -> new RuntimeException("Lecture not found"));
+
+        Chapter chapter = new Chapter();
+        chapter.setTitle(dto.getTitle());
+        chapter.setOrderIndex(dto.getOrderIndex());
+        chapter.setUrl(dto.getUrl());
+        chapter.setDuration(dto.getDuration());
+        chapter.setLecture(lecture);   // ⭐ 반드시 강의 연결
+
         Chapter saved = chapterService.save(chapter);
-        return modelMapper.map(saved, ChapterDTO.class);
+
+        ChapterDTO result = modelMapper.map(saved, ChapterDTO.class);
+        result.setLectureId(lecture.getLectureId());
+
+        return result;
     }
 
     // 삭제
