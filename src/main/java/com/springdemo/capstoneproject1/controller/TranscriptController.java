@@ -37,20 +37,7 @@ public class TranscriptController {
     }
 
 
-    @GetMapping("/{id}")
-    public TranscriptDTO getById(@PathVariable Integer id) {
-        Transcript transcript = transcriptService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transcript not found"));
 
-        TranscriptDTO dto = new TranscriptDTO();
-        dto.setTranscriptId(transcript.getTranscriptId());
-        dto.setStartTime(transcript.getStartTime());
-        dto.setContent(transcript.getContent());
-        dto.setCreatedAt(transcript.getCreatedAt());
-        dto.setLectureId(transcript.getLecture().getLectureId());
-
-        return dto;
-    }
 
     @PostMapping
     public Transcript create(@RequestBody Transcript transcript) {
@@ -89,5 +76,20 @@ public class TranscriptController {
     @DeleteMapping("/lecture/{lectureId}")
     public void deleteByLecture(@PathVariable Integer lectureId) {
         transcriptService.deleteByLectureId(lectureId);
+    }
+
+    @GetMapping("/{id}")
+    public TranscriptDTO getById(@PathVariable Integer id) {
+        Transcript transcript = transcriptService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transcript not found"));
+
+        TranscriptDTO dto = new TranscriptDTO();
+        dto.setTranscriptId(transcript.getTranscriptId());
+        dto.setStartTime(transcript.getStartTime());
+        dto.setContent(transcript.getContent());
+        dto.setCreatedAt(transcript.getCreatedAt());
+        dto.setLectureId(transcript.getLecture().getLectureId());
+
+        return dto;
     }
 }
