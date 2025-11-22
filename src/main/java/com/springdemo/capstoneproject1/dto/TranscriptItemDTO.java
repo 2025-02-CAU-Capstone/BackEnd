@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class TranscriptItemDTO {
-    private Double startTime;
+    private String startTime;
     private String content;
 }
