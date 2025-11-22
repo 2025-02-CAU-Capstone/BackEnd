@@ -63,10 +63,8 @@ public class TranscriptService {
             String timePart = line.substring(1, line.indexOf("]"));
             String contentPart = line.substring(line.indexOf("]") + 1).trim();
 
-            double startTimeSeconds = convertTimeToSeconds(timePart);
-
             Transcript t = new Transcript();
-            t.setStartTime(startTimeSeconds);
+            t.setStartTime(timePart);
             t.setContent(contentPart);
             t.setChapter(chapter);
             t.setCreatedAt(LocalDateTime.now());
@@ -118,10 +116,8 @@ public class TranscriptService {
             String timePart = raw.substring(1, raw.indexOf("]"));
             // "00:00:02,610"
 
-            double seconds = convertTimeToSeconds(timePart);
-
             Transcript t = new Transcript();
-            t.setStartTime(seconds);
+            t.setStartTime(timePart);
             t.setContent(item.getContent());
             t.setChapter(chapter);
             t.setCreatedAt(LocalDateTime.now());

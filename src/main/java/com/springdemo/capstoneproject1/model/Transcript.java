@@ -14,7 +14,7 @@ public class Transcript {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer transcriptId;
 
-    private Double startTime;
+    private String startTime;
 
     @Column(columnDefinition = "TEXT")
     private String content;
