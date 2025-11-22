@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -76,14 +77,15 @@ public class EmbeddingService {
         EmbeddingMetadataRequest meta =
                 objectMapper.readValue(new File(META_JSON), EmbeddingMetadataRequest.class);
 
-        double[][] emb = loadNpyAsDoubleArray();
+        byte[] npyBytes = Files.readAllBytes(Paths.get("/home/ubuntu/embeddings/latest.npy"));
+        String b64 = Base64.getEncoder().encodeToString(npyBytes);
 
         return new EmbeddingResponseDTO(
                 meta.getTimestamp(),
                 meta.getText(),
                 meta.getLectureId(),
                 meta.getChapterId(),
-                emb
+                b64
         );
     }
 }
