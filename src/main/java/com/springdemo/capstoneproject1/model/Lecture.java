@@ -21,8 +21,4 @@ public class Lecture {
     private String description;
 
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    // Lecture : Chapter = 1:N
-    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
-    private List<Chapter> chapters;
 }
