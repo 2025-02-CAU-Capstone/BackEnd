@@ -33,4 +33,10 @@ public class EmbeddingController {
     public EmbeddingResponseDTO getLatest() throws Exception {
         return embeddingService.loadLatest();
     }
+
+    @DeleteMapping("/delete")
+    public String deleteEmbeddings() throws Exception {
+        embeddingService.deleteLatest();
+        return "Embedding files deleted";
+    }
 }

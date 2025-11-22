@@ -77,7 +77,7 @@ public class EmbeddingService {
         EmbeddingMetadataRequest meta =
                 objectMapper.readValue(new File(META_JSON), EmbeddingMetadataRequest.class);
 
-        byte[] npyBytes = Files.readAllBytes(Paths.get("/home/ubuntu/embeddings/latest.npy"));
+        byte[] npyBytes = Files.readAllBytes(Paths.get(EMBEDDING_NPY));
         String b64 = Base64.getEncoder().encodeToString(npyBytes);
 
         return new EmbeddingResponseDTO(
@@ -87,5 +87,21 @@ public class EmbeddingService {
                 meta.getChapterId(),
                 b64
         );
+    }
+
+    public void deleteLatest() throws Exception {
+        // metadata.json 삭제
+        try {
+            Files.deleteIfExists(Paths.get(META_JSON));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete metadata.json", e);
+        }
+
+        // embeddings.npy 삭제
+        try {
+            Files.deleteIfExists(Paths.get(EMBEDDING_NPY));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete embeddings.npy", e);
+        }
     }
 }
