@@ -11,5 +11,5 @@ public class EmbeddingResponseDTO {
     private List<String> text;
     private List<Integer> lectureId;
     private List<Integer> chapterId;
-    private double[][] embeddings;   // npy → double[][] 변환
+    private String embeddingsB64;   // base64로 인코딩한 NPY
 }
