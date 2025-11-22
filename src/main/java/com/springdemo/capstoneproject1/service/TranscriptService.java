@@ -107,8 +107,21 @@ public class TranscriptService {
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
 
         for (TranscriptItemDTO item : req.getTranscripts()) {
+
+            String raw = item.getStartTime(); // "[00:00:02,610]"
+
+            if (raw == null || raw.length() < 2) {
+                throw new RuntimeException("Invalid startTime format: " + raw);
+            }
+
+            // TXT에서처럼 → 1번 인덱스부터 ']' 위치까지 substring
+            String timePart = raw.substring(1, raw.indexOf("]"));
+            // "00:00:02,610"
+
+            double seconds = convertTimeToSeconds(timePart);
+
             Transcript t = new Transcript();
-            t.setStartTime(item.getStartTime());
+            t.setStartTime(seconds);
             t.setContent(item.getContent());
             t.setChapter(chapter);
             t.setCreatedAt(LocalDateTime.now());
@@ -116,6 +129,7 @@ public class TranscriptService {
             transcriptRepository.save(t);
         }
     }
+
 
     // 챕터가 없으면 생성하는 헬퍼 메서드
     private Chapter getOrCreateChapter(Integer lectureId, Integer chapterId) {
