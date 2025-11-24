@@ -31,3 +31,5 @@ springdoc:
       - name: default
         url: https://13-209-30-220.nip.io/v3/api-docs
 
+ai-server:
+  base-url: ${FASTAPI_AI_BASEURL}
