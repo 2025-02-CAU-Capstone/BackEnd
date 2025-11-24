@@ -22,7 +22,7 @@ public class Problem {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @OneToOne(mappedBy = "problem", cascade = CascadeType.ALL)
-    private Match match;
+    // @OneToOne(mappedBy = "problem", cascade = CascadeType.ALL)
+    // private Match match;
 }
 
