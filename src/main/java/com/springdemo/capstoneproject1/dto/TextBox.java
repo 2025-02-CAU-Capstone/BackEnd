@@ -1,12 +1,19 @@
 package com.springdemo.capstoneproject1.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 public class TextBox {
+
+    @JsonProperty("box")
+    private List<List<Float>> box;
+
+    @JsonProperty("text")
     private String text;
-    private double confidence;
-    private List<List<Integer>> bbox;  // [[x1,y1],[x2,y2] ...]
+
+    @JsonProperty("conf")
+    private double conf;
 }

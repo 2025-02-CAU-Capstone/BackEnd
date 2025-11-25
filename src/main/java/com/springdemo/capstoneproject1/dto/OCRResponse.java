@@ -1,5 +1,6 @@
 package com.springdemo.capstoneproject1.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -7,16 +8,27 @@ import java.util.List;
 @Data
 public class OCRResponse {
 
+    @JsonProperty("success")
     private boolean success;
 
-    private List<TextBox> textBoxes;   // 박스 목록
-    private List<String> sentences;    // 분석된 문장 리스트
+    @JsonProperty("textBoxes")
+    private List<TextBox> textBoxes;
 
-    private String raw_text;           // 전체 텍스트
-    private double confidence;         // 전체 OCR 신뢰도
+    @JsonProperty("sentences")
+    private List<String> sentences;
 
-    private int imageWidth;            // 원본 이미지 너비
-    private int imageHeight;           // 원본 이미지 높이
+    @JsonProperty("raw_text")
+    private String rawText;
 
-    private String message;            // 오류 시 메시지(옵션)
+    @JsonProperty("confidence")
+    private double confidence;
+
+    @JsonProperty("imageWidth")
+    private int imageWidth;
+
+    @JsonProperty("imageHeight")
+    private int imageHeight;
+
+    @JsonProperty("message")
+    private String message;
 }
