@@ -47,11 +47,25 @@ public class HistoryService {
     }
 
     private int convertToSeconds(String ts) {
+
+        if (ts == null || ts.isBlank()) return 0;
+
+        // milliseconds 제거
+        if (ts.contains(",")) ts = ts.split(",")[0];
+        if (ts.contains(".")) ts = ts.split("\\.")[0];
+
         String[] p = ts.split(":");
-        return Integer.parseInt(p[0]) * 3600 +
-                Integer.parseInt(p[1]) * 60 +
-                Integer.parseInt(p[2]);
+        if (p.length != 3) return 0;
+
+        try {
+            return Integer.parseInt(p[0]) * 3600 +
+                    Integer.parseInt(p[1]) * 60 +
+                    Integer.parseInt(p[2]);
+        } catch (Exception e) {
+            return 0;
+        }
     }
+
 
     public List<History> getAllHistory() {
         return historyRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
