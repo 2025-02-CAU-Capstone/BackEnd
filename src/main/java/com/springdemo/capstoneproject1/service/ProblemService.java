@@ -19,6 +19,7 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
     private final AIOCRClient aiOcrClient;
     private final AISearchClient aiSearchClient;
+    private final HistoryService historyService;
 
     public ProblemSearchResponse processProblemWithImage(MultipartFile image) {
 
@@ -28,7 +29,7 @@ public class ProblemService {
         // 2) 문제 저장
         Problem saved = problemRepository.save(
                 Problem.builder()
-                        .imageUrl(null)     // 지금은 저장하지 않음
+                        .imageUrl(null)     // not saving image due to copyright reasons
                         .content(extractedText)
                         .createdAt(LocalDateTime.now())
                         .build()
@@ -36,6 +37,8 @@ public class ProblemService {
 
         // 3) AI Search
         AISearchResponse aiRes = aiSearchClient.search(extractedText);
+
+        historyService.saveHistory(extractedText, aiRes);
 
         // 4) 묶어서 FE에 반환
         ProblemSearchResponse res = new ProblemSearchResponse();
@@ -48,4 +51,5 @@ public class ProblemService {
 
         return res;
     }
+
 }
