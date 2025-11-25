@@ -50,15 +50,53 @@ public class SearchController {
     }
 
     private String buildYoutubeUrl(String baseUrl, String timestamp) {
-        int seconds = convertToSeconds(timestamp);
-        return baseUrl + "?t=" + seconds;
+        double seconds = convertToSeconds(timestamp);
+
+        int finalSeconds = (int) seconds;  // 소수점 제거 (floor)
+
+        return baseUrl + "?t=" + finalSeconds;
     }
 
-    private int convertToSeconds(String ts) {
-        String[] p = ts.split(":");
-        return Integer.parseInt(p[0]) * 3600 +
-                Integer.parseInt(p[1]) * 60 +
-                Integer.parseInt(p[2]);
+
+    private double convertToSeconds(String timestamp) {
+
+        if (timestamp == null || timestamp.isEmpty()) {
+            return 0.0;
+        }
+
+        // 입력 예: "12:34:56,789"
+        timestamp = timestamp.trim();
+
+        // 1. 콤마(,)를 소수점(.)으로 변경 → "12:34:56.789"
+        timestamp = timestamp.replace(",", ".");
+
+        // 2. HH:MM:SS(.ms) 형태인지 체크
+        String[] hms = timestamp.split(":");
+
+        double seconds = 0.0;
+
+        if (hms.length == 3) {
+            // HH:MM:SS(.ms)
+            int hours = Integer.parseInt(hms[0]);
+            int minutes = Integer.parseInt(hms[1]);
+            double sec = Double.parseDouble(hms[2]); // 밀리초 포함 처리
+
+            seconds = hours * 3600 + minutes * 60 + sec;
+
+        } else if (hms.length == 2) {
+            // MM:SS(.ms)
+            int minutes = Integer.parseInt(hms[0]);
+            double sec = Double.parseDouble(hms[1]);
+
+            seconds = minutes * 60 + sec;
+
+        } else {
+            // 그냥 숫자 혹은 SS(.ms)
+            seconds = Double.parseDouble(timestamp);
+        }
+
+        return seconds;
     }
+
 }
 
