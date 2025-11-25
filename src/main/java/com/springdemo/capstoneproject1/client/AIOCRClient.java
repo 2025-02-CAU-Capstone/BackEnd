@@ -1,5 +1,6 @@
 package com.springdemo.capstoneproject1.client;
 
+import com.springdemo.capstoneproject1.dto.OCRResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -11,15 +12,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class AIOCRClient {
 
-    private final WebClient aiWebClient;
+    private final WebClient aiWebClient; // baseUrl 설정된 WebClient
 
-    public String ocr(MultipartFile image) {
+    public OCRResponse ocr(MultipartFile image) {
+
         return aiWebClient.post()
-                .uri("/ocr")
+                .uri("/ocr")   // FastAPI OCR 엔드포인트
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromMultipartData("file", image.getResource()))
+                .body(BodyInserters
+                        .fromMultipartData("file", image.getResource()))
                 .retrieve()
-                .bodyToMono(String.class)
-                .block();
+                .bodyToMono(OCRResponse.class)
+                .block();   // 동기 호출
     }
 }
