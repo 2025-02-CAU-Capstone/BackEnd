@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
@@ -17,14 +18,15 @@ public class AIOCRClient {
     public OCRResponse ocr(MultipartFile image) {
         try {
             MultipartBodyBuilder builder = new MultipartBodyBuilder();
-            builder.part("file", image.getResource())
+            builder
+                    .part("file", image.getBytes())
                     .filename(image.getOriginalFilename())
-                    .contentType(MediaType.parseMediaType(image.getContentType()));
+                    .contentType(MediaType.MULTIPART_FORM_DATA);
 
             return aiWebClient.post()
                     .uri("/ocr")
                     .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .bodyValue(builder.build())
+                    .body(BodyInserters.fromMultipartData(builder.build()))
                     .retrieve()
                     .bodyToMono(OCRResponse.class)
                     .block();
@@ -33,4 +35,5 @@ public class AIOCRClient {
             throw new RuntimeException("FastAPI OCR 요청 실패: " + e.getMessage(), e);
         }
     }
+
 }
