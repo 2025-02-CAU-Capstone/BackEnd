@@ -92,16 +92,16 @@ public class EmbeddingService {
         EmbeddingMetadataRequest meta =
                 objectMapper.readValue(new File(META_JSON), EmbeddingMetadataRequest.class);
 
-        byte[] npyBytes = Files.readAllBytes(Paths.get(EMBEDDING_NPY));
-        String b64 = Base64.getEncoder().encodeToString(npyBytes);
-
         return new EmbeddingResponseDTO(
                 meta.getTimestamp(),
                 meta.getText(),
                 meta.getLectureId(),
-                meta.getChapterId(),
-                b64
+                meta.getChapterId()// NPY는 더 이상 응답에 포함시키지 않음
         );
+    }
+
+    public byte[] loadNpyFile() throws Exception {
+        return Files.readAllBytes(Paths.get(EMBEDDING_NPY));
     }
 
     public void deleteLatest() throws Exception {
