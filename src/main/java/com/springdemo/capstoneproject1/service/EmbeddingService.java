@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
@@ -28,15 +31,27 @@ public class EmbeddingService {
         objectMapper.writeValue(new File(META_JSON), req);
     }
 
-    public void saveNpy(byte[] npyBytes) throws Exception {
-        Files.write(Paths.get(EMBEDDING_NPY), npyBytes);
+//    public void saveNpy(byte[] npyBytes) throws Exception {
+//        Files.write(Paths.get(EMBEDDING_NPY), npyBytes);
+//    }
+
+    /** NPY 파일 스트리밍 방식으로 저장 (메모리 폭발 방지) */
+    public void saveNpyStream(InputStream inputStream) throws Exception {
+        File dir = new File(BASE_PATH);
+        if (!dir.exists()) dir.mkdirs();
+
+        File targetFile = new File(EMBEDDING_NPY);
+
+        try (OutputStream out = new FileOutputStream(targetFile)) {
+            inputStream.transferTo(out);  // 스트리밍 저장
+        }
     }
 
-    // NPY → double[][] 변환
-    private double[][] loadNpyAsDoubleArray() throws Exception {
-        byte[] bytes = Files.readAllBytes(Paths.get(EMBEDDING_NPY));
-        return npyToDoubleArray(bytes);
-    }
+//    // NPY → double[][] 변환
+//    private double[][] loadNpyAsDoubleArray() throws Exception {
+//        byte[] bytes = Files.readAllBytes(Paths.get(EMBEDDING_NPY));
+//        return npyToDoubleArray(bytes);
+//    }
 
     /** 최소 구현: numpy npy to double[][] (float32 assumed) */
     private double[][] npyToDoubleArray(byte[] npyBytes) {
@@ -104,4 +119,6 @@ public class EmbeddingService {
             throw new RuntimeException("Failed to delete embeddings.npy", e);
         }
     }
+
+
 }
