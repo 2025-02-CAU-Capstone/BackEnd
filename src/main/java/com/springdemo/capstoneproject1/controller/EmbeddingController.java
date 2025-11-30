@@ -36,6 +36,11 @@ public class EmbeddingController {
         return embeddingService.loadLatest();
     }
 
+    @GetMapping(value = "/latest-npy", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public byte[] downloadNpy() throws Exception {
+        return embeddingService.loadNpyFile();
+    }
+
     @DeleteMapping("/delete")
     public String deleteEmbeddings() throws Exception {
         embeddingService.deleteLatest();
