@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.InputStream;
+
 @RestController
 @RequestMapping("/api/embeddings")
 @RequiredArgsConstructor
@@ -21,10 +23,10 @@ public class EmbeddingController {
         return "Metadata saved";
     }
 
-    /** 2) NPY 저장 */
+    /** 2) NPY 저장 (스트리밍 방식으로 변경) */
     @PostMapping(value = "/upload-npy", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public String uploadNpy(@RequestBody byte[] npy) throws Exception {
-        embeddingService.saveNpy(npy);
+    public String uploadNpy(InputStream inputStream) throws Exception {
+        embeddingService.saveNpyStream(inputStream);
         return "npy saved";
     }
 
