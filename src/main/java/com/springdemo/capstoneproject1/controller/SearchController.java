@@ -51,10 +51,14 @@ public class SearchController {
 
     private String buildYoutubeUrl(String baseUrl, String timestamp) {
         double seconds = convertToSeconds(timestamp);
+        int finalSeconds = (int) seconds;  // 소수점 제거
 
-        int finalSeconds = (int) seconds;  // 소수점 제거 (floor)
-
-        return baseUrl + "?t=" + finalSeconds;
+        // 이미 URL에 ?가 있는 경우 -> 추가 파라미터는 &로 붙여야 함
+        if (baseUrl.contains("?")) {
+            return baseUrl + "&t=" + finalSeconds;
+        } else {
+            return baseUrl + "?t=" + finalSeconds;
+        }
     }
 
 
