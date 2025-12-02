@@ -4,7 +4,9 @@ import com.springdemo.capstoneproject1.dto.EmbeddingMetadataRequest;
 import com.springdemo.capstoneproject1.dto.EmbeddingResponseDTO;
 import com.springdemo.capstoneproject1.service.EmbeddingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
@@ -37,8 +39,13 @@ public class EmbeddingController {
     }
 
     @GetMapping(value = "/latest-npy", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public byte[] downloadNpy() throws Exception {
-        return embeddingService.loadNpyFile();
+    public ResponseEntity<InputStreamResource> downloadNpy() throws Exception {
+
+        InputStream stream = embeddingService.loadNpyStream();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(new InputStreamResource(stream));
     }
 
     @DeleteMapping("/delete")
