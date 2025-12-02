@@ -32,6 +32,6 @@ public class OCRResponse {
     @JsonProperty("message")
     private String message;
 
-    @JsonProperty("processedGroups")
+    @JsonProperty("processed_groups")
     private List<ProcessedGroup> processedGroups;
 }
