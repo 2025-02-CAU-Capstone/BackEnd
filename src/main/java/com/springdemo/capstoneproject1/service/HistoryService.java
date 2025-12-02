@@ -43,7 +43,15 @@ public class HistoryService {
 
     private String buildYoutubeUrl(String baseUrl, String timestamp) {
         int seconds = convertToSeconds(timestamp);
-        return baseUrl + "?t=" + seconds;
+
+        // 이미 파라미터가 있는지 확인
+        boolean hasQuery = baseUrl.contains("?");
+
+        if (hasQuery) {
+            return baseUrl + "&t=" + seconds;
+        } else {
+            return baseUrl + "?t=" + seconds;
+        }
     }
 
     private int convertToSeconds(String ts) {
