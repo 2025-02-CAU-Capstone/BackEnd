@@ -100,8 +100,12 @@ public class EmbeddingService {
         );
     }
 
-    public byte[] loadNpyFile() throws Exception {
-        return Files.readAllBytes(Paths.get(EMBEDDING_NPY));
+//    public byte[] loadNpyFile() throws Exception {
+//        return Files.readAllBytes(Paths.get(EMBEDDING_NPY));
+//    }
+
+    public InputStream loadNpyStream() throws Exception {
+        return Files.newInputStream(Paths.get(EMBEDDING_NPY));
     }
 
     public void deleteLatest() throws Exception {
