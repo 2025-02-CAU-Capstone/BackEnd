@@ -1,6 +1,7 @@
 package com.springdemo.capstoneproject1.controller;
 
 import com.springdemo.capstoneproject1.dto.ChapterDTO;
+import com.springdemo.capstoneproject1.dto.ChapterUpdateRequest;
 import com.springdemo.capstoneproject1.model.Chapter;
 import com.springdemo.capstoneproject1.model.Lecture;
 import com.springdemo.capstoneproject1.repository.LectureRepository;
@@ -64,4 +65,24 @@ public class ChapterController {
     public void delete(@PathVariable Integer id) {
         chapterService.delete(id);
     }
+
+    // 수정
+    @PutMapping("/{id}")
+    public ChapterDTO update(
+            @PathVariable Integer id,
+            @RequestBody ChapterUpdateRequest dto) {
+
+        Chapter chapter = chapterService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chapter not found: " + id));
+
+        if (dto.getTitle() != null) chapter.setTitle(dto.getTitle());
+        if (dto.getUrl() != null) chapter.setUrl(dto.getUrl());
+        if (dto.getOrderIndex() != null) chapter.setOrderIndex(dto.getOrderIndex());
+        if (dto.getDuration() != null) chapter.setDuration(dto.getDuration());
+
+        Chapter saved = chapterService.save(chapter);
+
+        return modelMapper.map(saved, ChapterDTO.class);
+    }
+
 }
