@@ -13,12 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/problems")
 public class ProblemController {
 
-    private final ProblemService problemService;
-
-    @PostMapping(value = "/analyze-with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ProblemSearchResponse analyzeWithImage(
-            @RequestPart MultipartFile image
-    ) {
-        return problemService.processProblemWithImage(image);
-    }
+//    private final ProblemService problemService;
+//
+//    @PostMapping(value = "/analyze-with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ProblemSearchResponse analyzeWithImage(
+//            @RequestPart MultipartFile image
+//    ) {
+//        return problemService.processProblemWithImage(image);
+//    }
 }
