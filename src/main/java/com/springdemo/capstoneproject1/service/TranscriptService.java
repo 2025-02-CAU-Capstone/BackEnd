@@ -145,4 +145,8 @@ public class TranscriptService {
                 });
     }
 
+    public List<Transcript> findByChapterId(Integer chapterId) {
+        return transcriptRepository.findByChapter_ChapterId(chapterId);
+    }
+
 }

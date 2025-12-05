@@ -39,6 +39,25 @@ public class TranscriptController {
                 .collect(Collectors.toList());
     }
 
+    /** Chapter ID 기준 Transcript 조회 */
+    @GetMapping("/chapter/{chapterId}")
+    public List<TranscriptDTO> getByChapterId(@PathVariable Integer chapterId) {
+
+        return transcriptService.findByChapterId(chapterId)
+                .stream()
+                .map(t -> {
+                    TranscriptDTO dto = new TranscriptDTO();
+                    dto.setTranscriptId(t.getTranscriptId());
+                    dto.setStartTime(t.getStartTime());
+                    dto.setContent(t.getContent());
+                    dto.setCreatedAt(t.getCreatedAt());
+                    dto.setChapterId(t.getChapter().getChapterId());
+                    dto.setLectureId(t.getChapter().getLecture().getLectureId());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
     /** 단일 Transcript 조회 */
     @GetMapping("/{id}")
     public TranscriptDTO getById(@PathVariable Integer id) {
